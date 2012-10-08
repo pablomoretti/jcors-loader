@@ -3,7 +3,9 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 var mu   = require('mu2');
- 
+
+var port = process.env.PORT || 8125;
+
 http.createServer(function (request, response) {
     
     var filePath = '.' + request.url;
@@ -43,7 +45,7 @@ http.createServer(function (request, response) {
 
                     var readStream = null
                     if(contentType == 'text/html'){
-                        readStream = mu.compileAndRender(filePath, {jcorsLoaderLib: data});
+                        readStream = mu.compileAndRender(filePath, {jcorsLoaderLib: data,env:process.env.PORT});
                     }else{
                         readStream = fs.createReadStream(filePath);
                     }
@@ -66,11 +68,6 @@ http.createServer(function (request, response) {
 
     }, sleep);
      
-}).listen(8125);
-
-//if (error) {
-//                        response.writeHead(500);
-//                        response.end();
-//                    }
+}).listen(port);
  
-console.log('Server running at http://127.0.0.1:8125/');
+console.log('Server running at http://127.0.0.1:'+port+'/');
