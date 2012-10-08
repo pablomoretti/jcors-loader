@@ -12,7 +12,7 @@ Goals
 
 The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
 
-<img width="258" src="http://imageshack.us/scaled/landing/84/screenshot20121008at123.png">
+<img src="http://imageshack.us/a/img203/6493/screenshot20121008at123.png">
 
 Really easy to use
 ------------------
@@ -29,7 +29,7 @@ Example "One source with one callback"
     JcorsLoader.load(
 				    	"http://xxxx/jquery.min.js", 
 				    	function() {
-				        	$("#demo").html("jQuery Loaded from CDN");
+        					$("#demo").html("jQuery Loaded");
 				    	}
     				);
 
@@ -39,8 +39,7 @@ Example "Multiple sources with multiple callbacks"
     JcorsLoader.load(
     					"http://xxxx/jquery.min.js",
 						function() {
-        					$("#demo").html("jQuery & jQuery UI Loaded from CDN");
-
+        					$("#demo").html("jQuery Loaded");
     					},
     					"http://xxxx/jquery.cookie.js",
     					function() {  
@@ -52,6 +51,7 @@ Example "Multiple sources with multiple callbacks"
 Test
 ----
 node tiny-http-server.js *
+open http://localhost:8125/test/index.html
 
 require node.js
 
@@ -64,6 +64,5 @@ require java
 How do I contribute ?
 ---------------------
 That is great! Just fork the project in github. Create a topic branch, write some code and send pull request.
-
 
 jcors-loader is licensed under the Apache Licence, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
