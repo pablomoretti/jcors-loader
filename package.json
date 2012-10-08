@@ -2,11 +2,11 @@
   "author": "Pablo Moretti <pablomoretti@gmail.com>",
   "name": "tiny-http-server",
   "description": "Tiny Http-server to test jcors-loader",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "dependencies": {
     "mu2": ">= 0.5.17"
   },  
   "engines": {
-    "node": "*"
+    "node": ">= 0.6.18"
   }
 }
