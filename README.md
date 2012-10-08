@@ -10,7 +10,7 @@ Goals
 - Works in Safari, Chrome, Firefox, IE8+. *
 - No loading indicators, the page looks done and whenever the script arrives.
 
-* The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
+The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
 
 <img width="258" src="http://imageshack.us/scaled/landing/84/screenshot20121008at123.png">
 
@@ -21,7 +21,7 @@ Really easy to use
 - Tell JcorsLoader the url of the javascript resource you want to load or callback to execute.
 - Enjoy it ;)
 
-* [enable-cors](http://enable-cors.org/)
+[enable-cors](http://enable-cors.org/)
 
 Example "One source with one callback"
 ----------------------------------
@@ -53,13 +53,13 @@ Test
 ----
 node tiny-http-server.js *
 
-* require node.js
+require node.js
 
 Build
 -----
 make build *
 
-* require java
+require java
 
 How do I contribute ?
 ---------------------
