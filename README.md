@@ -1,6 +1,6 @@
 jcors-loader (v.1.0.0)
 ======================
-Little tiny loader for javascript sources using CORS
+Little tiny loader for javascript sources using CORS 
 
 Goals
 ------------------
@@ -50,19 +50,19 @@ Example "Multiple sources with multiple callbacks"
 
 Test
 ----
-node tiny-http-server.js *
-open http://localhost:8125/test/index.html
+- node tiny-http-server.js *
+- open http://localhost:8125/test/index.html
 
 require node.js
 
 Build
 -----
-make build *
+- make build *
 
 require java
 
 How do I contribute ?
 ---------------------
-That is great! Just fork the project in github. Create a topic branch, write some code and send pull request.
+That is great! Just fork the project in github. Create a topic branch, write some code and send a pull request.
 
 jcors-loader is licensed under the Apache Licence, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
