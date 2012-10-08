@@ -5,23 +5,20 @@
 	</head>
 	<body>
 	<img src="img/logo.png">
-
-		{{{env}}}
-	
 	<script>
 		{{{jcorsLoaderLib}}}
 	</script>
 	<script>
 		try{
 			JcorsLoader.load(
-							'http://localhost:8125/test/js/jquery-1.8.2.min.js',
-							'http://localhost:8125/test/js/jquery.cookie.js',
+							'{{{base}}}/test/js/jquery-1.8.2.min.js',
+							'{{{base}}}/test/js/jquery.cookie.js',
 							function() {  
-								alert("OK");
+								alert("TEST OK");
 							}
 						);
 		}catch(err){
-			alert("FAILD");
+			alert("TEST FAILD");
 			console.log(err);
 		}
 	</script>

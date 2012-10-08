@@ -2,7 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
-var mu   = require('mu2');
+var mu   = require('./node_modules/mu2/');
 
 var port = process.env.PORT || 8125;
 
@@ -45,7 +45,16 @@ http.createServer(function (request, response) {
 
                     var readStream = null
                     if(contentType == 'text/html'){
-                        readStream = mu.compileAndRender(filePath, {jcorsLoaderLib: data,env:process.env.PORT});
+
+                        var base=null;
+                        if(process.env.PORT){
+                            base="http://jcors-loader.herokuapp.com"
+                        }
+                        else{
+                            base="http://localhost:" + port 
+                        }
+
+                        readStream = mu.compileAndRender(filePath, {jcorsLoaderLib: data,base:base});
                     }else{
                         readStream = fs.createReadStream(filePath);
                     }
