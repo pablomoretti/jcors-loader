@@ -1,6 +1,6 @@
-jcors-loader (v.1.0.0)
+jcors-loader (v.1.0.1)
 ======================
-Little tiny loader for javascript sources using CORS 
+Little tiny loader for javascript sources using CORS (only 1.1KB)
 
 Goals
 ------------------

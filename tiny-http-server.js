@@ -1,6 +1,8 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
+var util = require('util');
+var mu   = require('mu2');
  
 http.createServer(function (request, response) {
     
@@ -28,31 +30,47 @@ http.createServer(function (request, response) {
     }
 
     setTimeout(function() {
+
+        fs.readFile('./src/jcors-loader.js', 'utf8', function (err,data) {
    
-        path.exists(filePath, function(exists) {
-         
-            if (exists) {
-                fs.readFile(filePath, function(error, content) {
-                    if (error) {
-                        response.writeHead(500);
-                        response.end();
+            path.exists(filePath, function(exists) {
+             
+                if (exists) {
+
+                    response.setHeader('Content-Type', contentType);
+                    response.setHeader('Access-Control-Allow-Origin', '*' );
+                    response.writeHead(200);
+
+                    var readStream = null
+                    if(contentType == 'text/html'){
+                        readStream = mu.compileAndRender(filePath, {jcorsLoaderLib: data});
+                    }else{
+                        readStream = fs.createReadStream(filePath);
                     }
-                    else {
-                        response.setHeader('Content-Type', contentType);
-                        response.setHeader('Access-Control-Allow-Origin', '*' );
-                        response.writeHead(200);
-                        response.end(content, 'utf-8');
-                    }
-                });
-            }
-            else {
-                response.writeHead(404);
-                response.end();
-            }
+
+                    readStream.on('data', function(data) {
+                        response.write(data);
+                    });
+                    readStream.on('end', function() {
+                        response.end();        
+                    });
+
+                }
+                else {
+                    response.writeHead(404);
+                    response.end();
+                }
+            });
+
         });
 
     }, sleep);
      
 }).listen(8125);
+
+//if (error) {
+//                        response.writeHead(500);
+//                        response.end();
+//                    }
  
 console.log('Server running at http://127.0.0.1:8125/');
