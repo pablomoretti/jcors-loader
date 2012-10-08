@@ -1,6 +1,6 @@
 jcors-loader (v.1.0.1)
 ======================
-Little tiny loader for javascript sources using CORS (only 1.1KB)
+Little tiny loader for javascript sources using CORS (only 1.1KB plane and 647B with Gzip)
 
 Goals
 ------------------
@@ -11,6 +11,8 @@ Goals
 - No loading indicators, the page looks done and whenever the script arrives.
 
 The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
+
+[http://jcors-loader.herokuapp.com/test/](http://jcors-loader.herokuapp.com/test/index.html)
 
 <img src="http://imageshack.us/a/img203/6493/screenshot20121008at123.png">
 
