@@ -5,6 +5,7 @@
 	</head>
 	<body>
 	<img src="img/logo.png">
+	<h1 id="result"></h1>
 	<script>
 		{{{jcorsLoaderLib}}}
 	</script>
@@ -14,7 +15,7 @@
 							'{{{base}}}/test/js/jquery-1.8.2.min.js',
 							'{{{base}}}/test/js/jquery.cookie.js',
 							function() {  
-								alert("TEST OK");
+								$("#result").text("TEST OK");
 							}
 						);
 		}catch(err){
