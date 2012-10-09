@@ -1,12 +1,11 @@
 (function (document,window) {
-
-		var _node_createElementScript = document.createElement("script");
-		var _node_elementScript = document.getElementsByTagName('script')[0];
-		var _cors = createCORSRequest("about:blank") != null;
+		var _str_script = "script";
 		var _str_undefined = "undefined";
 		var _str_string = "string";
 		var _str_get = "get";
-
+		var _node_createElementScript = document.createElement(_str_script);
+		var _node_elementScript = document.getElementsByTagName(_str_script)[0];
+		var _cors = createCORSRequest("about:blank") != null;
 		var _buffer = [];
 
 		function createCORSRequest(url){
@@ -51,12 +50,12 @@
 				var scr = array.pop();
 				if (typeof scr === _str_string){
 					var s = _node_createElementScript.cloneNode(true);
-					s.type = 'text/javascript';
+					s.type = "text/javascript";
 					s.async = true;
 					s.src = scr;
 					if (_node_elementScript.readyState) {
 						s.onreadystatechange = function () {
-							if (s.readyState === 'loaded' || s.readyState === 'complete') {
+							if (s.readyState === "loaded" || s.readyState === "complete") {
 								s.onreadystatechange = null;
 							}
 						};
