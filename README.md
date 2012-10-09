@@ -7,7 +7,7 @@ Goals
 - Load javascript files asynchronously in parallel.
 - Execute javascript in order.
 - Doesn't block window.onload or DOMContentLoaded. *
-- Works in Safari, Chrome, Firefox, IE8+. *
+- Works in Safari, Chrome, Firefox, Opera, IE6+. *
 - No loading indicators, the page looks done and whenever the script arrives.
 
 The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
