@@ -4,9 +4,9 @@ Little tiny loader for javascript sources using CORS (only 1.1KB plane and 647B 
 
 Goals
 ------------------
-- Loads a javascript file asynchronously in parallel.
-- Execute avascript in order.
-- Doesn't block window.onload or DOMContentLoaded.
+- Load javascript files asynchronously in parallel.
+- Execute javascript in order.
+- Doesn't block window.onload or DOMContentLoaded. *
 - Works in Safari, Chrome, Firefox, IE8+. *
 - No loading indicators, the page looks done and whenever the script arrives.
 
@@ -19,7 +19,7 @@ The script works fine in IE 6/7 and Opera, but blocks onload and sources not loa
 Really easy to use
 ------------------
 - Include inline jcors-loader.min.js.
-- Enable cors in your server if you are loading sources from other domains. *
+- Enable CORS in your server if you are loading sources from other domain (cross-domain). *
 - Tell JcorsLoader the url of the javascript resource you want to load or callback to execute.
 - Enjoy it ;)
 
