@@ -6,7 +6,7 @@ Goals
 ------------------
 - Loads a javascript file asynchronously in parallel.
 - Execute avascript in order.
-- Doesn't block window.onload nor DOMContentLoaded.
+- Doesn't block window.onload or DOMContentLoaded.
 - Works in Safari, Chrome, Firefox, IE8+. *
 - No loading indicators, the page looks done and whenever the script arrives.
 
