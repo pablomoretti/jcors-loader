@@ -10,7 +10,7 @@ Goals
 - Works in Safari, Chrome, Firefox, Opera, IE6+. *
 - No loading indicators, the page looks done and whenever the script arrives.
 
-The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
+\* The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
 
 [http://jcors-loader.herokuapp.com/test/](http://jcors-loader.herokuapp.com/test/index.html)
 
@@ -18,36 +18,36 @@ The script works fine in IE 6/7 and Opera, but blocks onload and sources not loa
 
 Really easy to use
 ------------------
-- Include inline jcors-loader.min.js.
+- Include inline [jcors-loader.min.js](https://raw.github.com/pablomoretti/jcors-loader/master/src/jcors-loader.min.js).
 - Enable CORS in your server if you are loading sources from other domain (cross-domain). *
 - Tell JcorsLoader the url of the javascript resource you want to load or callback to execute.
 - Enjoy it ;)
 
-[How enable CORS ?](http://enable-cors.org/)
+\* [How enable CORS ?](http://enable-cors.org/)
 
 Example "One source with one callback"
 ----------------------------------
     
-    JcorsLoader.load(
-				    	"http://xxxx/jquery.min.js", 
-				    	function() {
-        					$("#demo").html("jQuery Loaded");
-				    	}
-    				);
+JcorsLoader.load(
+		"http://xxxx/jquery.min.js", 
+		function() {
+        		$("#demo").html("jQuery Loaded");
+		}
+		);
 
 Example "Multiple sources with multiple callbacks"
 --------------------------------------------------
     
-    JcorsLoader.load(
-    					"http://xxxx/jquery.min.js",
-						function() {
-        					$("#demo").html("jQuery Loaded");
-    					},
-    					"http://xxxx/jquery.cookie.js",
-    					function() {  
-    						$.cookie('not_existing'); 
-    					}
-    				);
+JcorsLoader.load(
+    		"http://xxxx/jquery.min.js",
+		function() {
+        		$("#demo").html("jQuery Loaded");
+    		},
+    		"http://xxxx/jquery.cookie.js",
+    		function() {  
+    			$.cookie('not_existing'); 
+    		}
+    		);
 
 
 Test
