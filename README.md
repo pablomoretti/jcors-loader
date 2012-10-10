@@ -23,7 +23,7 @@ Really easy to use
 - Tell JcorsLoader the url of the javascript resource you want to load or callback to execute.
 - Enjoy it ;)
 
-[enable-cors](http://enable-cors.org/)
+[How enable CORS ?](http://enable-cors.org/)
 
 Example "One source with one callback"
 ----------------------------------
@@ -52,16 +52,18 @@ Example "Multiple sources with multiple callbacks"
 
 Test
 ----
-- node tiny-http-server.js *
+require : node.js
+
+- node tiny-http-server.js
 - open http://localhost:8125/test/index.html
 
-require node.js
 
 Build
 -----
-- make build *
+require : java
 
-require java
+- make build
+
 
 How do I contribute ?
 ---------------------
