@@ -1,10 +1,9 @@
 (function (document,window) {
-		var _str_script = "script";
 		var _str_undefined = "undefined";
 		var _str_string = "string";
 		var _str_get = "get";
-		var _node_createElementScript = document.createElement(_str_script);
-		var _node_elementScript = document.getElementsByTagName(_str_script)[0];
+		var _node_createElementScript = document.createElement("script");
+		var _node_elementScript = document.getElementsByTagName("script")[0];
 		var _cors = createCORSRequest("about:blank") != null;
 		var _buffer = [];
 
@@ -45,30 +44,29 @@
 	    	}
 		}
 
-		function loadScript(array){
-			if(typeof array !== _str_undefined){
-				var scr = array.pop();
+		function loadsScriptsOnChain(scripts){
+			if(scripts.length){
+				var scr = scripts.pop();
 				if (typeof scr === _str_string){
-					var s = _node_createElementScript.cloneNode(true);
-					s.type = "text/javascript";
-					s.async = true;
-					s.src = scr;
-					if (_node_elementScript.readyState) {
-						s.onreadystatechange = function () {
-							if (s.readyState === "loaded" || s.readyState === "complete") {
-								s.onreadystatechange = null;
-							}
-						};
-					}
-					else{
-						s.onload = function () {
-								loadScript(array);
-						};
-					}
-					_node_elementScript.parentNode.insertBefore(s, _node_elementScript);
+					var script = _node_createElementScript.cloneNode(true);
+					script.type = "text/javascript";
+					script.async = true;
+					script.src = scr;
+					// Attach handlers for all browsers
+					script.onload = script.onreadystatechange = function() {
+						if ( !script.readyState || /loaded|complete/.test( s.readyState ) ) {
+							// Handle memory leak in IE
+							script.onload = script.onreadystatechange = null;
+							// Dereference the script
+							script = undefined;
+							// Load
+							loadsScriptsOnChain(scripts);
+						}
+					};
+					_node_elementScript.parentNode.insertBefore(script, _node_elementScript);
 				}else{
 					scr.apply(window);
-						loadScript(array);
+					 loadsScriptsOnChain(scripts);
 				}
 			}
 		}
@@ -83,6 +81,8 @@
 							request.onload = (function(i,request) {
 								return function() {
 								    	executeInOrder(request.responseText,i);
+								    	// Dereference the script
+										request = undefined;
 								}
 		      				})(i,request);
 							request.send();
@@ -91,7 +91,7 @@
 						}
 	            	}
 	            }else{
-					loadScript(Array.prototype.slice.call(params, 0).reverse());
+					 loadsScriptsOnChain(Array.prototype.slice.call(params, 0).reverse());
 	            }
 	        }
     	};

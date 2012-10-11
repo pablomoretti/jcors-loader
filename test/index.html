@@ -10,7 +10,6 @@
 		{{{jcorsLoaderLib}}}
 	</script>
 	<script>
-		try{
 			JcorsLoader.load(
 							'{{{base}}}/test/js/jquery-1.8.2.min.js',
 							'{{{base}}}/test/js/jquery.cookie.js',
@@ -18,10 +17,6 @@
 								$("#result").text("TEST OK");
 							}
 						);
-		}catch(err){
-			alert("TEST FAILD");
-			console.log(err);
-		}
 	</script>
 	</body>
 </html>
