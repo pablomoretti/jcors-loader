@@ -8,8 +8,8 @@
 		var _buffer = [];
 
 		function createCORSRequest(url){
-		    var xhr = new XMLHttpRequest();
-		    if ("withCredentials" in xhr){
+			var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : null;
+		    if (xhr != null && "withCredentials" in xhr){
 		        xhr.open(_str_get, url, true);
 		    } else if (typeof XDomainRequest != _str_undefined){
 		        xhr = new XDomainRequest();
