@@ -28,26 +28,26 @@ Really easy to use
 Example "One source with one callback"
 ----------------------------------
     
-JcorsLoader.load(
-		"http://xxxx/jquery.min.js", 
-		function() {
-        		$("#demo").html("jQuery Loaded");
-		}
-		);
+	JcorsLoader.load(
+			"http://xxxx/jquery.min.js", 
+			function() {
+	        		$("#demo").html("jQuery Loaded");
+			}
+			);
 
 Example "Multiple sources with multiple callbacks"
 --------------------------------------------------
     
-JcorsLoader.load(
-    		"http://xxxx/jquery.min.js",
-		function() {
-        		$("#demo").html("jQuery Loaded");
-    		},
-    		"http://xxxx/jquery.cookie.js",
-    		function() {  
-    			$.cookie('not_existing'); 
-    		}
-    		);
+	JcorsLoader.load(
+	    		"http://xxxx/jquery.min.js",
+			function() {
+	        		$("#demo").html("jQuery Loaded");
+	    		},
+	    		"http://xxxx/jquery.cookie.js",
+	    		function() {  
+	    			$.cookie('not_existing'); 
+	    		}
+	    		);
 
 
 Test
