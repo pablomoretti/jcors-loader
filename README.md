@@ -1,4 +1,4 @@
-jcors-loader (v.1.0.7)
+jcors-loader (v.1.0.8)
 ======================
 Little tiny loader for javascript sources using CORS (only 1.1KB plane and 657B with Gzip)
 
