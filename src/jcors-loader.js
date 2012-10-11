@@ -52,9 +52,8 @@
 					script.type = "text/javascript";
 					script.async = true;
 					script.src = scr;
-					// Attach handlers for all browsers
 					script.onload = script.onreadystatechange = function() {
-						if ( !script.readyState || /loaded|complete/.test( s.readyState ) ) {
+						if ( !script.readyState || /loaded|complete/.test( script.readyState ) ) {
 							// Handle memory leak in IE
 							script.onload = script.onreadystatechange = null;
 							// Dereference the script
@@ -62,7 +61,7 @@
 							// Load
 							loadsScriptsOnChain(scripts);
 						}
-					};
+					};					
 					_node_elementScript.parentNode.insertBefore(script, _node_elementScript);
 				}else{
 					scr.apply(window);
@@ -71,23 +70,25 @@
 			}
 		}
 
+		function onloadCORSHandler(request,index) {
+			return function() {
+				executeInOrder(request.responseText,index);
+				// Dereference the script
+				request = undefined;
+			}
+		}
+
     	window.JcorsLoader =  {
 	        load: function () {
 	            var params = arguments;
 	            if(_cors){
-	            	for (var i = 0; i < params.length; i++) {
-		            	if (typeof params[i] === _str_string){
-				            request = createCORSRequest(params[i]);
-							request.onload = (function(i,request) {
-								return function() {
-								    	executeInOrder(request.responseText,i);
-								    	// Dereference the script
-										request = undefined;
-								}
-		      				})(i,request);
+	            	for (var index = 0; index < params.length; index++) {
+		            	if (typeof params[index] === _str_string){
+				            request = createCORSRequest(params[index]);
+							request.onload = onloadCORSHandler(request,index);
 							request.send();
 						}else{
-							executeInOrder(params[i],i);
+							executeInOrder(params[index],index);
 						}
 	            	}
 	            }else{
