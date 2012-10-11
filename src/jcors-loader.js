@@ -7,26 +7,29 @@
 		isCORS = window.XDomainRequest || window.XMLHttpRequest || false,
 		buffer = [],
 		createCORSRequest = (function () {
-			var xhr;
+			var xhr,
+				CORSRequest;
 
 			if (window.XMLHttpRequest) {
 				xhr = new window.XMLHttpRequest();
 
 				if (xhr.hasOwnProperty && xhr.hasOwnProperty('withCredentials')) {
-					return function (url) {
+					CORSRequest = function (url) {
 						xhr = new window.XMLHttpRequest();
 						xhr.open('get', url, true);
 
 						return xhr;
 					};
+				} else {
+					CORSRequest = function (url) {
+						xhr = new window.XDomainRequest();
+						xhr.open('get', url);
+
+						return xhr;
+					};
 				}
 
-				return function (url) {
-					xhr = new window.XDomainRequest();
-					xhr.open('get', url);
-
-					return xhr;
-				};
+				return CORSRequest;
 			}
 
 		}());
@@ -99,9 +102,10 @@
 	window.JcorsLoader =  {
 		load: (function () {
 
-			if (isCORS) {
+			var load;
 
-				return function () {
+			if (isCORS) {
+				load = function () {
 					var params = arguments,
 						i = 0,
 						len = params.length,
@@ -117,9 +121,11 @@
 						}
 					}
 				};
+			} else {
+				load = function () { loadsScriptsOnChain(Array.prototype.slice.call(arguments, 0).reverse()); };
 			}
 
-			return function () { loadsScriptsOnChain(Array.prototype.slice.call(arguments, 0).reverse()); };
+			return load;
 		}())
 	};
 }(this));
