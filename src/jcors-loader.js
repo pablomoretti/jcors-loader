@@ -1,98 +1,125 @@
-(function (document,window) {
-		var _str_script = "script";
-		var _str_undefined = "undefined";
-		var _str_string = "string";
-		var _str_get = "get";
-		var _node_createElementScript = document.createElement(_str_script);
-		var _node_elementScript = document.getElementsByTagName(_str_script)[0];
-		var _cors = createCORSRequest("about:blank") != null;
-		var _buffer = [];
+(function (window) {
+	'use strict';
 
-		function createCORSRequest(url){
-		    var xhr = new XMLHttpRequest();
-		    if ("withCredentials" in xhr){
-		        xhr.open(_str_get, url, true);
-		    } else if (typeof XDomainRequest != _str_undefined){
-		        xhr = new XDomainRequest();
-		        xhr.open(_str_get, url);
-		    } else {
-		        xhr = null;
-		    }
-		    return xhr;
+	var document = window.document,
+		node_createElementScript = document.createElement('script'),
+		node_elementScript = document.getElementsByTagName('script')[0],
+		isCORS = window.XDomainRequest || window.XMLHttpRequest || false,
+		buffer = [],
+		createCORSRequest = (function () {
+			var xhr;
+
+			if (window.XMLHttpRequest) {
+				xhr = new window.XMLHttpRequest();
+
+				if (xhr.hasOwnProperty && xhr.hasOwnProperty('withCredentials')) {
+					return function (url) {
+						xhr = new window.XMLHttpRequest();
+						xhr.open('get', url, true);
+
+						return xhr;
+					};
+				}
+
+				return function (url) {
+					xhr = new window.XDomainRequest();
+					xhr.open('get', url);
+
+					return xhr;
+				};
+			}
+
+		}());
+
+	function execute(script) {
+		if (typeof script === 'string') {
+			var g = node_createElementScript.cloneNode(true);
+			g.text = script;
+			node_elementScript.parentNode.insertBefore(g, node_elementScript);
+		} else {
+			script.apply(window);
 		}
+	}
 
-		function execute(script){
-			if (typeof script === _str_string){
-				var g = _node_createElementScript.cloneNode(true);
-				g.text = script;
-				_node_elementScript.parentNode.insertBefore(g, _node_elementScript);
-			}else{
-				script.apply(window);
+	function executeInOrder(script, index) {
+		buffer[index] = script;
+
+		var e = true,
+			i = 0,
+			len = buffer.length;
+
+		for (i; i < len; i += 1) {
+			if (buffer[i] === undefined) {
+				e = false;
+			}
+
+			if (buffer[i] !== null && e) {
+				execute(buffer[i]);
+				buffer[i] = null;
 			}
 		}
+	}
 
-		function executeInOrder(script,index){
-			_buffer[index] = script;
-			var e = true;
-			for (var i = 0; i < _buffer.length; i++){
-				if(typeof _buffer[i] == _str_undefined){
-					e = false;
-				}
-				if(_buffer[i] != null && e){
-					execute(_buffer[i]);
-					_buffer[i] = null;
-				}
-	    	}
-		}
+	function loadsScriptsOnChain(scripts) {
+		if (scripts.length) {
+			var scr = scripts.pop(),
+				script;
 
-		function loadScript(array){
-			if(typeof array !== _str_undefined){
-				var scr = array.pop();
-				if (typeof scr === _str_string){
-					var s = _node_createElementScript.cloneNode(true);
-					s.type = "text/javascript";
-					s.async = true;
-					s.src = scr;
-					if (_node_elementScript.readyState) {
-						s.onreadystatechange = function () {
-							if (s.readyState === "loaded" || s.readyState === "complete") {
-								s.onreadystatechange = null;
-							}
-						};
+			if (typeof scr === 'string') {
+				script = node_createElementScript.cloneNode(true);
+				script.type = 'text/javascript';
+				script.async = true;
+				script.src = scr;
+				script.onload = script.onreadystatechange = function () {
+					if (!script.readyState || /loaded|complete/.test(script.readyState)) {
+						// Handle memory leak in IE
+						script.onload = script.onreadystatechange = null;
+						// Dereference the script
+						script = undefined;
+						// Load
+						loadsScriptsOnChain(scripts);
 					}
-					else{
-						s.onload = function () {
-								loadScript(array);
-						};
-					}
-					_node_elementScript.parentNode.insertBefore(s, _node_elementScript);
-				}else{
-					scr.apply(window);
-						loadScript(array);
-				}
+				};
+				node_elementScript.parentNode.insertBefore(script, node_elementScript);
+			} else {
+				scr.apply(window);
+				loadsScriptsOnChain(scripts);
 			}
 		}
+	}
 
-    	window.JcorsLoader =  {
-	        load: function () {
-	            var params = arguments;
-	            if(_cors){
-	            	for (var i = 0; i < params.length; i++) {
-		            	if (typeof params[i] === _str_string){
-				            request = createCORSRequest(params[i]);
-							request.onload = (function(i,request) {
-								return function() {
-								    	executeInOrder(request.responseText,i);
-								}
-		      				})(i,request);
+	function onloadCORSHandler(request, index) {
+		return function () {
+			executeInOrder(request.responseText, index);
+			// Dereference the script
+			request = undefined;
+		};
+	}
+
+	window.JcorsLoader =  {
+		load: (function () {
+
+			if (isCORS) {
+
+				return function () {
+					var params = arguments,
+						i = 0,
+						len = params.length,
+						request;
+
+					for (i; i < len; i += 1) {
+						if (typeof params[i] === 'string') {
+							request = createCORSRequest(params[i]);
+							request.onload = onloadCORSHandler(request, i);
 							request.send();
-						}else{
-							executeInOrder(params[i],i);
+						} else {
+							executeInOrder(params[i], i);
 						}
-	            	}
-	            }else{
-					loadScript(Array.prototype.slice.call(params, 0).reverse());
-	            }
-	        }
-    	};
-	}(document,window));
+					}
+				};
+			}
+
+			return function () { loadsScriptsOnChain(Array.prototype.slice.call(arguments, 0).reverse()); };
+		}())
+	};
+}(this));
