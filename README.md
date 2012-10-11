@@ -40,7 +40,7 @@ Example "Multiple sources with multiple callbacks"
     
 	JcorsLoader.load(
 	    		"http://xxxx/jquery.min.js",
-			function() {
+				function() {
 	        		$("#demo").html("jQuery Loaded");
 	    		},
 	    		"http://xxxx/jquery.cookie.js",
