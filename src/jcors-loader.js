@@ -16,7 +16,7 @@
 				CORSRequest;
 			if (window.XMLHttpRequest) {
 				xhr = new window.XMLHttpRequest();
-				if (xhr.hasOwnProperty && xhr.hasOwnProperty('withCredentials')) {
+				if ("withCredentials" in xhr) {
 					CORSRequest = function (url) {
 						xhr = new window.XMLHttpRequest();
 						xhr.open('get', url, true);
