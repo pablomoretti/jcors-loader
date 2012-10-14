@@ -11,7 +11,7 @@ Goals
 - No loading indicators, the page looks done and whenever the script arrives.
 - JSLint validation.
 
-\* The script works fine in IE 6/7 and Opera, but blocks onload and sources not load in parallel
+\* The script works fine in IE 6/7 but blocks onload and sources not load in parallel.
 
 [http://jcors-loader.herokuapp.com/test/](http://jcors-loader.herokuapp.com/test/index.html)
 
