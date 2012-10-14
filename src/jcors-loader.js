@@ -1,124 +1,132 @@
 // 2012 Pablo Moretti, https://github.com/pablomoretti/jcors-loader
 
-!function (document, window) {
+(function (window) {
 
-/* private */
+	'use strict';
 
-	var JcorsLoader, // container
-		_str_undefined = "undefined",
-		_str_string = "string",
-		_str_get = "get",
-		_node_createElementScript = document.createElement("script"),
-		_node_elementScript = document.getElementsByTagName("script")[0],
-		_cors = createCORSRequest("about:blank") !== null,
-		_buffer = [];
+	/* private */
 
-	function createCORSRequest(url) {
-		var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : null;
-		if (xhr !== null && "withCredentials" in xhr){
-			xhr.open(_str_get, url, true);
-		} else if (typeof XDomainRequest != _str_undefined){
-			xhr = new XDomainRequest();
-			xhr.open(_str_get, url);
-		} else {
-			xhr = null;
-		}
-		return xhr;
-	}
+	var document = window.document,
+		node_createElementScript = document.createElement('script'),
+		node_elementScript = document.getElementsByTagName('script')[0],
+		buffer = [],
+		lastBufferIndex = 0,
+		createCORSRequest = (function () {
+			var xhr,
+				CORSRequest;
+			if (window.XMLHttpRequest) {
+				xhr = new window.XMLHttpRequest();
+				if (xhr.hasOwnProperty && xhr.hasOwnProperty('withCredentials')) {
+					CORSRequest = function (url) {
+						xhr = new window.XMLHttpRequest();
+						xhr.open('get', url, true);
+						return xhr;
+					};
+				} else if (window.XDomainRequest) {
+					CORSRequest = function (url) {
+						xhr = new window.XDomainRequest();
+						xhr.open('get', url);
+						return xhr;
+					};
+				}
+			}
+			return CORSRequest;
+		}());
 
 	function execute(script) {
-		console.log(script)
-		if (typeof script === _str_string) {
-			var g = _node_createElementScript.cloneNode(true);
+		if (typeof script === 'string') {
+			var g = node_createElementScript.cloneNode(false);
 			g.text = script;
-			_node_elementScript.parentNode.insertBefore(g, _node_elementScript);
+			node_elementScript.parentNode.insertBefore(g, node_elementScript);
 		} else {
 			script.apply(window);
 		}
 	}
 
-	function executeInOrder(script,index) {
-		_buffer[index] = script;
-		var e = true;
-		for (var i = 0; i < _buffer.length; i++) {
-			if(typeof _buffer[i] == _str_undefined) {
-				e = false;
-			}
-			if(_buffer[i] !== null && e) {
-				execute(_buffer[i]);
-				_buffer[i] = null;
+	function saveInBuffer(index, script) {
+		buffer[index] = script;
+	}
+
+	function executeBuffer() {
+		var dep = true,
+			script,
+			index = lastBufferIndex,
+			len = buffer.length;
+
+		while (index < len && dep) {
+			script = buffer[index];
+			if (script !== undefined && script !== null) {
+				execute(script);
+				lastBufferIndex = index;
+				saveInBuffer(index, null);
+				index += 1;
+			} else {
+				dep = false;
 			}
 		}
 	}
 
-	function loadsScriptsOnChain(scripts) {
-		if(scripts.length) {
-			var scr = scripts.pop();
-			if (typeof scr === _str_string) {
-				var script = _node_createElementScript.cloneNode(true);
+	function loadsAndExecuteScriptsOnChain() {
+		if (buffer.length) {
+			var scr = buffer.pop(),
+				script;
+			if (typeof scr === 'string') {
+				script = node_createElementScript.cloneNode(true);
 				script.type = "text/javascript";
 				script.async = true;
 				script.src = scr;
-				script.onload = script.onreadystatechange = function() {
-					if ( !script.readyState || /loaded|complete/.test( script.readyState ) ) {
+				script.onload = script.onreadystatechange = function () {
+					if (!script.readyState || /loaded|complete/.test(script.readyState)) {
 						// Handle memory leak in IE
 						script.onload = script.onreadystatechange = null;
 						// Dereference the script
 						script = undefined;
 						// Load
-						loadsScriptsOnChain(scripts);
+						loadsAndExecuteScriptsOnChain();
 					}
 				};
-			_node_elementScript.parentNode.insertBefore(script, _node_elementScript);
+				node_elementScript.parentNode.insertBefore(script, node_elementScript);
 			} else {
 				scr.apply(window);
-				loadsScriptsOnChain(scripts);
+				loadsAndExecuteScriptsOnChain();
 			}
 		}
 	}
 
-	function onloadCORSHandler(request,index) {
-		return function() {
-			executeInOrder(request.responseText,index);
+	function onloadCORSHandler(request, index) {
+		return function () {
+			saveInBuffer(index, request.responseText);
+			executeBuffer();
 			// Dereference the script
 			request = undefined;
 		};
 	}
 
-/* public */
+	/* public */
 
-	function load() {
-		var params = arguments;
-			if (_cors) {
-			for (var index = 0; index < params.length; index++) {
-				if (typeof params[index] === _str_string){
-					request = createCORSRequest(params[index]);
-					request.onload = onloadCORSHandler(request,index);
-					request.send();
-				} else {
-					executeInOrder(params[index],index);
-				}
+	function loadWithCORS() {
+		var len = arguments.length,
+			index,
+			request;
+		for (index = 0; index < len; index += 1) {
+			if (typeof arguments[index] === 'string') {
+				request = createCORSRequest(arguments[index]);
+				request.onload = onloadCORSHandler(request, index);
+				request.send();
+			} else {
+				saveInBuffer(index, arguments[index]);
+				executeBuffer();
 			}
-		} else {
-			loadsScriptsOnChain(Array.prototype.slice.call(params, 0).reverse());
 		}
 	}
 
-/* exports */
-
-	JcorsLoader = { load: load };
-
-	// If an AMD loader is present use AMD.
-	// If a CommonJS loader is present use CommonJS.
-	// Otherwise assign the 'JcorsLoader' object to the global scope.
-	if (typeof define === 'function' && define.amd) {
-		define(function () {
-			return JcorsLoader;
-		});
-	} else if (typeof exports !== 'undefined') {
-		exports.JcorsLoader = JcorsLoader;
-	} else {
-		window.JcorsLoader = JcorsLoader;
+	function loadWihtOutCORS() {
+		buffer = Array.prototype.slice.call(arguments, 0).reverse();
+		loadsAndExecuteScriptsOnChain();
 	}
 
-}(document, window);
+	/* exports */
+
+	window.JcorsLoader =  { load: (createCORSRequest ? loadWithCORS  : loadWihtOutCORS)};
+
+}(window));
