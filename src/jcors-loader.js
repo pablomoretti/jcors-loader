@@ -35,10 +35,9 @@
 
 	function execute(script) {
 		if (typeof script === 'string') {
-			eval(script);
-			//var g = node_createElementScript.cloneNode(false);
-			//g.text = script;
-			//node_elementScript.parentNode.insertBefore(g, node_elementScript);
+			var g = node_createElementScript.cloneNode(false);
+			g.text = script;
+			node_elementScript.parentNode.insertBefore(g, node_elementScript);
 		} else {
 			script.apply(window);
 		}
