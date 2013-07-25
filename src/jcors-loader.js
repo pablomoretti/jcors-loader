@@ -35,9 +35,10 @@
 
 	function execute(script) {
 		if (typeof script === 'string') {
-			var g = node_createElementScript.cloneNode(false);
-			g.text = script;
-			node_elementScript.parentNode.insertBefore(g, node_elementScript);
+			eval(script);
+			//var g = node_createElementScript.cloneNode(false);
+			//g.text = script;
+			//node_elementScript.parentNode.insertBefore(g, node_elementScript);
 		} else {
 			script.apply(window);
 		}
@@ -57,7 +58,7 @@
 			script = buffer[index];
 			if (script !== undefined && script !== null) {
 				execute(script);
-				lastBufferIndex = index;
+				lastBufferIndex = index + 1;
 				saveInBuffer(index, null);
 				index += 1;
 			} else {
@@ -111,10 +112,10 @@
 		for (index = 0; index < len; index += 1) {
 			if (typeof arguments[index] === 'string') {
 				request = createCORSRequest(arguments[index]);
-				request.onload = onloadCORSHandler(request, index);
+				request.onload = onloadCORSHandler(request, index + lastBufferIndex);
 				request.send();
 			} else {
-				saveInBuffer(index, arguments[index]);
+				saveInBuffer(index + lastBufferIndex, arguments[index]);
 				executeBuffer();
 			}
 		}
