@@ -47,6 +47,11 @@
 		buffer[index] = script;
 	}
 
+	function finishedTask(index) {
+		saveInBuffer(index, null);
+		lastBufferIndex = index+1;
+	}
+
 	function executeBuffer() {
 		var dep = true,
 			script,
@@ -57,8 +62,7 @@
 			script = buffer[index];
 			if (script !== undefined && script !== null) {
 				execute(script);
-				lastBufferIndex = index + 1;
-				saveInBuffer(index, null);
+				finishedTask(index);
 				index += 1;
 			} else {
 				dep = false;
@@ -111,17 +115,18 @@
 		for (index = 0; index < len; index += 1) {
 			if (typeof arguments[index] === 'string') {
 				request = createCORSRequest(arguments[index]);
-				request.onload = onloadCORSHandler(request, index + lastBufferIndex);
+				request.onload = onloadCORSHandler(request, buffer.length);
+				saveInBuffer(buffer.length, null);
 				request.send();
 			} else {
-				saveInBuffer(index + lastBufferIndex, arguments[index]);
+				saveInBuffer(buffer.length, arguments[index]);
 				executeBuffer();
 			}
 		}
 	}
 
 	function loadWihtOutCORS() {
-		buffer = Array.prototype.slice.call(arguments, 0).reverse();
+		buffer.push(Array.prototype.slice.call(arguments, 0).reverse());
 		loadsAndExecuteScriptsOnChain();
 	}
 
