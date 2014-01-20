@@ -1,3 +1,5 @@
+// 2012 Pablo Moretti, https://github.com/pablomoretti/jcors-loader
+
 (function (window) {
 
 	'use strict';
