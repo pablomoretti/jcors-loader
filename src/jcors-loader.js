@@ -11,6 +11,7 @@
 		node_elementScript = document.getElementsByTagName('script')[0],
 		buffer = [],
 		lastBufferIndex = 0,
+		processingBuffer = false,
 		createCORSRequest = (function () {
 			var xhr,
 				CORSRequest;
@@ -44,6 +45,7 @@
 	}
 
 	function saveInBuffer(index, script) {
+		
 		buffer[index] = script;
 	}
 
@@ -58,16 +60,26 @@
 			index = lastBufferIndex,
 			len = buffer.length;
 
+		if( !processingBuffer ) {
+			processingBuffer = true
+		} else {
+			setTimeout(executeBuffer, 500);
+			return;
+		}
+
 		while (index < len && dep) {
 			script = buffer[index];
 			if (script !== undefined && script !== null) {
 				execute(script);
+				
 				finishedTask(index);
 				index += 1;
+				
 			} else {
 				dep = false;
 			}
 		}
+		processingBuffer = false
 	}
 
 	function loadsAndExecuteScriptsOnChain() {
