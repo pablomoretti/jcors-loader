@@ -1,13 +1,13 @@
 jcors-loader (v.1.2.0)
 ======================
-Little tiny loader for javascript sources using CORS (only 1.2KB plane and 673 with Gzip)
+Little tiny loader for javascript sources using CORS (only 1.2KB plain and 673 with Gzip)
 
 Goals
 ------------------
 - Load javascript files asynchronously in parallel.
 - Execute javascript in order.
 - Doesn't block window.onload or DOMContentLoaded. *
-- Soport in Safari, Chrome, Firefox, Opera, IE6+. *
+- Support in Safari, Chrome, Firefox, Opera, IE6+. *
 - No loading indicators, the page looks done and whenever the script arrives.
 - JSLint validation.
 
