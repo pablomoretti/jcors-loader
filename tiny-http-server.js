@@ -35,7 +35,7 @@ http.createServer(function (request, response) {
 
         fs.readFile('./src/jcors-loader.js', 'utf8', function (err,data) {
    
-            path.exists(filePath, function(exists) {
+            fs.exists(filePath, function(exists) {
              
                 if (exists) {
 
